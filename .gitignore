@@ -1,2 +1,5 @@
 /.apt_generated/
 /target/
+/.classpath
+/.factorypath
+/.project
