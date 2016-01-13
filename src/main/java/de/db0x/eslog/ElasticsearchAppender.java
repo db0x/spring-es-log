@@ -33,6 +33,12 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	@Value(value="${server.port}")
 	private String serverPort;
 
+	@Value(value="${spring.application.name}")
+	private String appName;
+
+	@Value(value="${spring.application.log.enable-es-log}")
+	private Boolean enabled;
+
 	@Autowired
 	private LogProperties properties;
 	
@@ -41,7 +47,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 
 		try {
 			
-			if ( env.getProperty("spring.application.log.enable-es-log") == null || env.getProperty("spring.application.log.enable-es-log").equalsIgnoreCase("false") ) {
+			if ( enabled != null && enabled.booleanValue() == false ) {
 				LOG.info("ElasticsearchAppender is disabled");
 				return;
 			}
@@ -50,12 +56,21 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 				for ( Object key : properties.getParameters().keySet() ) {
 					LOG.info("   -> " + key.toString());;
 				}
-			} else {
-				LOG.info("---------------- ES PROPS is null ----------------");
 			}
+
 			MDC.put("host",Utils.getHost());
-			MDC.put("port",serverPort);
-			MDC.put("spring.application.name", env.getProperty("spring.application.name"));
+			
+			if ( serverPort != null ) {
+				MDC.put("port",serverPort);
+			} else {
+				MDC.put("port","-UNKNOWN-");
+			}
+			
+			if ( appName != null ) {
+				MDC.put("spring.application.name", appName); 
+			} else {
+				MDC.put("spring.application.name", "-UNKNOWN-");
+			}
 
 			ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory
 					.getLogger(Logger.ROOT_LOGGER_NAME);
