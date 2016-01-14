@@ -18,9 +18,9 @@ spring:
     name: myApp                                    # is required if you use parameters.application
     log: 
       enable-es-log: true                          # default is true
-      es-log-url: http://localhost:9200/_bulk      # default is localhost:9200/_bulk
-      index-name: log-%date{yyyy-MM-dd}            # default is log-%date{yyyy-MM-dd} 
-      type: myApplog                               # optional
+      es-log-url: "http://localhost:9200/_bulk"    # default is localhost:9200/_bulk
+      index-name: "log-%date{yyyy-MM-dd}"          # default is log-%date{yyyy-MM-dd} 
+      type: "eslog"                                # default is eslog
       parameters:        
         severity: "%level"                         # default is %level
         thread: "%thread"                          # default is %thread

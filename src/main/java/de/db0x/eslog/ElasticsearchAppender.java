@@ -38,7 +38,16 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 
 	@Value(value="${spring.application.log.enable-es-log}")
 	private Boolean enabled;
+	
+	@Value(value="${spring.application.log.type}")
+	private String type;
+	
+	@Value(value="${spring.application.log.index-name}")
+	private String indexName;
 
+	@Value(value="${spring.application.log.es-log-url}")	
+	private String url;
+	
 	@Autowired
 	private LogProperties properties;
 	
@@ -54,7 +63,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 			
 			if ( properties.getParameters() != null ) {
 				for ( Object key : properties.getParameters().keySet() ) {
-					LOG.info("   -> " + key.toString());;
+					LOG.info("   -> " + key.toString() + " - " + properties.getParameters().get(key));
 				}
 			}
 
@@ -78,13 +87,25 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 			LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 			
 			Settings settings = new Settings();
-			settings.setIndex("log-%date{yyyy-MM-dd}");
+			
+			if ( indexName == null || indexName.length() == 0 )
+				indexName = "log-%date{yyyy-MM-dd}";
+			settings.setIndex(indexName);
+			
 			settings.setLoggerName("es-logger");
-			settings.setUrl(new URL(env.getProperty("spring.application.log.es-log-url")));
-			settings.setType("ic-log");
+			
+			if ( url == null || url.length() == 0 )
+				url = "http://localhost:9200/_bulk";
+			settings.setUrl(new URL(url));
+			
+			if ( type == null || type.length() == 0 )
+				type = "eslog";
+ 			settings.setType(type);
 
 			ElasticsearchAppender ea = new ElasticsearchAppender(settings);
 			ElasticsearchProperties ep = new ElasticsearchProperties();
+			
+			
 			Property pHost = new Property();
 			pHost.setName("host");
 			pHost.setValue("%X{host}");
@@ -131,7 +152,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 			ch.qos.logback.classic.Logger eslog = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("es-logger");
 			eslog.setAdditive(false);
 			
-			LOG.info("ElasticsearchAppender added ["+env.getProperty("spring.application.log.es-log-url")+"]");
+			LOG.info("ElasticsearchAppender added ["+url+"]");
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 		}
