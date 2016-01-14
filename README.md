@@ -22,7 +22,7 @@ spring:
       index-name: log-%date{yyyy-MM-dd}           # default is log-%date{yyyy-MM-dd} 
       type: myApplog                              # optional
       parameters:        
-        severity: \%level                         # default is INFO
+        severity: \%level                         # default is \%level
         thread: \%thread                          # default is \%thread
         logger: \%logger                          # default is \%logger
         stacktrace: \%ex                          # default is \%ex
