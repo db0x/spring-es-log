@@ -1,6 +1,8 @@
 # spring-es-log
 Integration of ElasticSearch-Log Appender in spring-boot without xml configuration
 
+[![Build Status](https://travis-ci.org/db0x/spring-es-log.svg?branch=master)](https://travis-ci.org/db0x/spring-es-log)
+
 bases on https://github.com/internetitem/logback-elasticsearch-appender
 
 motivation : use elasticsearch-appender without logback.xml 
