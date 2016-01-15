@@ -1,5 +1,5 @@
 # spring-es-log
-Integration of direct ElasticSearch-Log Appender in spring-boot
+Integration of ElasticSearch-Log Appender in spring-boot without xml configuration
 
 bases on https://github.com/internetitem/logback-elasticsearch-appender
 
@@ -31,3 +31,16 @@ spring:
         application: "%X{spring.application.name}" # optional will print spring.application.name
         
 ```
+usage:
+simply add it in your maven pom 
+```xml
+		<dependency>
+			<groupId>de.db0x</groupId>
+			<artifactId>spring-es-log</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+```
+and annotate an class with @EnableESLog.
+
+pro + no xml configuration is needed
+neg - the first events are not logged to ES because the appender is armed after the spring-context is loaded 
