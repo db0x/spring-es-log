@@ -46,7 +46,7 @@ and annotate an class with @EnableESLog.
 * pro + no xml configuration is needed
 * neg - the first events are not logged to ES because the appender is armed after the spring-context is loaded
 
-Usage of additional %X{} parameters
+Usage of additional %X{...} parameters
 ===================================
 you can add new columns to the index using parameter and %X{...}
 
