@@ -32,7 +32,7 @@ spring:
         
 ```
 usage:
-simply add it in your maven pom 
+simply add it to your maven pom 
 ```xml
 		<dependency>
 			<groupId>de.db0x</groupId>
@@ -43,4 +43,10 @@ simply add it in your maven pom
 and annotate an class with @EnableESLog.
 
 pro + no xml configuration is needed
-neg - the first events are not logged to ES because the appender is armed after the spring-context is loaded 
+
+neg - the first events are not logged to ES because the appender is armed after the spring-context is loaded
+
+usage of additional %X{} parameters:
+you can add new columns to the index using parameter and %X{...}
+
+with %X you can read what was put into org.slf4j.MDC
