@@ -20,7 +20,8 @@ spring:
     name: myApp                                    # is required if you use parameters.application
     log: 
       enable-es-log: true                          # default is true
-      es-log-url: "http://localhost:9200/_bulk"    # default is localhost:9200/_bulk
+      host: localhost                              # host of the es cluster default is localhost
+      ports: [9200,9300]                           # ports of the es cluster default is 9200 / 9300
       index-name: "log-%date{yyyy-MM-dd}"          # default is log-%date{yyyy-MM-dd} 
       type: "eslog"                                # default is eslog
       parameters:        

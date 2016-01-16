@@ -69,6 +69,11 @@
 			<optional>true</optional>
 			<version>${springboot.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>1.7.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

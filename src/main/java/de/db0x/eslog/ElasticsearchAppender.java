@@ -41,13 +41,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	
 	@Value(value="${spring.application.log.type}")
 	private String type;
-	
-	@Value(value="${spring.application.log.index-name}")
-	private String indexName;
-
-	@Value(value="${spring.application.log.es-log-url}")	
-	private String url;
-	
+		
 	@Autowired
 	private LogProperties properties;
 	
@@ -82,15 +76,29 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 			
 			Settings settings = new Settings();
 			
-			if ( indexName == null || indexName.length() == 0 )
-				indexName = "log-%date{yyyy-MM-dd}";
-			settings.setIndex(indexName);
+			if ( properties.getIndexName() == null || properties.getIndexName().length() == 0 )
+				properties.setIndexName("log-%date{yyyy-MM-dd}");
+			settings.setIndex(properties.getIndexName());
 			
 			settings.setLoggerName("es-logger");
 			
-			if ( url == null || url.length() == 0 )
-				url = "http://localhost:9200/_bulk";
+			String url;
+			if ( properties.getHost() == null || properties.getHost().length() == 0 ) {
+				url = "http://localhost:";
+			} else {
+				url = "http://"+properties.getHost()+":";
+			}
+			
+			if ( properties.getPorts() == null || properties.getPorts().size() == 0 ) {
+				url= url+"9200";
+			} else {
+				url= url+properties.getPorts().get(0);
+			}
+			
+			url = url+"/_bulk";
 			settings.setUrl(new URL(url));
+			
+			
 			
 			if ( type == null || type.length() == 0 )
 				type = "eslog";
