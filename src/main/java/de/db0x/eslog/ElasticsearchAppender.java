@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.internetitem.logback.elasticsearch.AbstractElasticsearchAppender;
@@ -27,9 +26,6 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 
 	private final static Logger LOG = LoggerFactory.getLogger(ElasticsearchAppender.class);
 	
-	@Autowired
-	Environment env;
-	
 	@Value(value="${server.port}")
 	private String serverPort;
 
@@ -38,9 +34,6 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 
 	@Value(value="${spring.application.log.enable-es-log}")
 	private Boolean enabled;
-	
-	@Value(value="${spring.application.log.type}")
-	private String type;
 		
 	@Autowired
 	private LogProperties properties;
@@ -98,11 +91,9 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 			url = url+"/_bulk";
 			settings.setUrl(new URL(url));
 			
-			
-			
-			if ( type == null || type.length() == 0 )
-				type = "eslog";
- 			settings.setType(type);
+			if ( properties.getType() == null || properties.getType().length() == 0 )
+				properties.setType("eslog");
+ 			settings.setType(properties.getType());
 
 			ElasticsearchAppender ea = new ElasticsearchAppender(settings);
 			ElasticsearchProperties ep = new ElasticsearchProperties();
