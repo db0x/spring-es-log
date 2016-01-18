@@ -24,6 +24,7 @@ spring:
       ports: [9200,9300]                           # ports of the es cluster default is 9200 / 9300
       index-name: "log-%date{yyyy-MM-dd}"          # default is log-%date{yyyy-MM-dd} 
       type: "eslog"                                # default is eslog
+      autoclean: true                              # default is true ( container will clean the indices )
       parameters:        
         severity: "%level"                         # default is %level
         thread: "%thread"                          # default is %thread
