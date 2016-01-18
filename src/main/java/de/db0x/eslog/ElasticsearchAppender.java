@@ -38,6 +38,11 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	@Autowired
 	private LogProperties properties;
 
+	private ElasticsearchProperties esProperties = new ElasticsearchProperties();
+
+	public ElasticsearchAppender() {
+	}
+
 	@PostConstruct
 	private void init() {
 
@@ -96,23 +101,19 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 			settings.setType(properties.getType());
 
 			ElasticsearchAppender ea = new ElasticsearchAppender(settings);
-			ElasticsearchProperties ep = new ElasticsearchProperties();
-
-			addParameter(ep, "logger", properties.getParameters().get("logger"), "%logger");
-			addParameter(ep, "thread", properties.getParameters().get("thread"), "%thread");
-			addParameter(ep, "severity", properties.getParameters().get("severity"), "%level");
-			addParameter(ep, "stacktrace", properties.getParameters().get("stacktrace"), "%ex");
-
+			
+			addDefaultParameters();
+			
 			if (properties.getParameters() != null) {
 				for (String key : properties.getParameters().keySet()) {
 					LOG.info("   -> " + key.toString() + " - " + properties.getParameters().get(key));
 					if (!"logger.thread.severity.stacktrace".contains(key)) {
-						addParameter(ep, key, properties.getParameters().get(key), properties.getParameters().get(key));
+						addParameter( key, properties.getParameters().get(key), properties.getParameters().get(key) );
 					}
 				}
 			}
 
-			ea.setProperties(ep);
+			ea.setProperties(esProperties);
 			ea.setContext(lc);
 			ea.start();
 
@@ -126,8 +127,15 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 			LOG.error(e.getMessage());
 		}
 	}
-
-	private void addParameter(ElasticsearchProperties ep, String parameter, String value, String defaultValue) {
+    
+	public void addDefaultParameters() {
+		addParameter( "logger", properties.getParameters().get("logger"), "%logger" );
+		addParameter( "thread", properties.getParameters().get("thread"), "%thread" );
+		addParameter( "severity", properties.getParameters().get("severity"), "%level" );
+		addParameter( "stacktrace", properties.getParameters().get("stacktrace"), "%ex" );
+	}
+	
+	public void addParameter( String parameter, String value, String defaultValue ) {
 		Property property = new Property();
 		property.setName(parameter);
 		if (value == null) {
@@ -135,10 +143,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 		}
 		
 		property.setValue(value);
-		ep.addProperty(property);
-	}
-
-	public ElasticsearchAppender() {
+		esProperties.addProperty(property);
 	}
 
 	public ElasticsearchAppender(Settings settings) {
@@ -170,6 +175,10 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 
 	protected ClassicElasticsearchPublisher buildElasticsearchPublisher() throws IOException {
 		return new ClassicElasticsearchPublisher(getContext(), errorReporter, settings, elasticsearchProperties);
+	}
+
+	public ElasticsearchProperties getEsProperties() {
+		return esProperties;
 	}
 
 }
