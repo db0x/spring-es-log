@@ -23,11 +23,11 @@ import org.springframework.stereotype.Component;
 public class ElasticsearchCleanup {
 
 	private final static Logger LOG = LoggerFactory.getLogger(ElasticsearchCleanup.class);
-	
+
 	@Autowired
 	private IndexCleaner ic;
 
-	//@Scheduled(fixedRate = 5000)
+	// @Scheduled(fixedRate = 5000)
 	@PostConstruct
 	public void clean() {
 		try (TransportClient client = new TransportClient()) {
@@ -37,15 +37,17 @@ public class ElasticsearchCleanup {
 					.actionGet().getState().getMetaData().getIndices();
 
 			for (ObjectCursor<String> key : indexes.keys()) {
-				if ( Utils.indexNameMatch(key.value, "")) {
+				if (Utils.indexNameMatch(key.value, "")) {
 					Date created = new Date(indexes.get(key.value).creationDate());
-					if ( Utils.addDays( null, - 3 ).after(created) && client.prepareCount(key.value).get().getCount() > 0 ) {
-						LOG.info("cleanup index "+ key.value+" ["+ client.prepareCount(key.value).get().getCount()+"]");
-						ic.clean(  key.value );
+					if (Utils.addDays(null, -3).after(created) && // TODO change 3 to property 
+							client.prepareCount(key.value).get().getCount() > 0) {
+						LOG.info("cleanup index " + key.value + " [" + client.prepareCount(key.value).get().getCount()
+								+ "]");
+						ic.clean(key.value);
 					}
 				}
 			}
-			if ( LOG == null ) {
+			if (LOG == null) {
 			}
 		}
 	}

@@ -9,18 +9,18 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(value = "spring.application.log", merge = true)
 @Component
 public class LogProperties {
-	
+
 	private boolean enableEsLog;
-		
-	private Map<String,String> parameters;
-	
+
+	private Map<String, String> parameters;
+
 	private String indexName;
-	
+
 	private String type;
-	
+
 	private String host;
-	
-	private  List<Integer> ports;
+
+	private List<Integer> ports;
 
 	public boolean isEnableEsLog() {
 		return enableEsLog;
@@ -46,11 +46,11 @@ public class LogProperties {
 		this.type = type;
 	}
 
-	public Map<String,String> getParameters() {
+	public Map<String, String> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(Map<String,String> parameters) {
+	public void setParameters(Map<String, String> parameters) {
 		this.parameters = parameters;
 	}
 
@@ -69,5 +69,5 @@ public class LogProperties {
 	public void setHost(String host) {
 		this.host = host;
 	}
-	
+
 }

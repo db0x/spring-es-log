@@ -25,75 +25,75 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggingEvent> {
 
 	private final static Logger LOG = LoggerFactory.getLogger(ElasticsearchAppender.class);
-	
-	@Value(value="${server.port}")
+
+	@Value(value = "${server.port}")
 	private String serverPort;
 
-	@Value(value="${spring.application.name}")
+	@Value(value = "${spring.application.name}")
 	private String appName;
 
-	@Value(value="${spring.application.log.enable-es-log}")
+	@Value(value = "${spring.application.log.enable-es-log}")
 	private Boolean enabled;
-		
+
 	@Autowired
 	private LogProperties properties;
-	
+
 	@PostConstruct
 	private void init() {
 
 		try {
-			
-			if ( enabled != null && enabled.booleanValue() == false ) {
+
+			if (enabled != null && enabled.booleanValue() == false) {
 				LOG.info("ElasticsearchAppender is disabled");
 				return;
 			}
 
-			MDC.put("host",Utils.getHost());
-			
-			if ( serverPort != null ) {
-				MDC.put("port",serverPort);
+			MDC.put("host", Utils.getHost());
+
+			if (serverPort != null) {
+				MDC.put("port", serverPort);
 			} else {
-				MDC.put("port","-UNKNOWN-");
+				MDC.put("port", "-UNKNOWN-");
 			}
-			
-			if ( appName != null ) {
-				MDC.put("spring.application.name", appName); 
+
+			if (appName != null) {
+				MDC.put("spring.application.name", appName);
 			} else {
 				MDC.put("spring.application.name", "-UNKNOWN-");
 			}
 
 			ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory
 					.getLogger(Logger.ROOT_LOGGER_NAME);
-			
+
 			LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-			
+
 			Settings settings = new Settings();
-			
-			if ( properties.getIndexName() == null || properties.getIndexName().length() == 0 )
+
+			if (properties.getIndexName() == null || properties.getIndexName().length() == 0)
 				properties.setIndexName("log-%date{yyyy-MM-dd}");
 			settings.setIndex(properties.getIndexName());
-			
+
 			settings.setLoggerName("es-logger");
-			
+
 			String url;
-			if ( properties.getHost() == null || properties.getHost().length() == 0 ) {
+			if (properties.getHost() == null || properties.getHost().length() == 0) {
 				url = "http://localhost:";
 			} else {
-				url = "http://"+properties.getHost()+":";
+				url = "http://" + properties.getHost() + ":";
 			}
-			
-			if ( properties.getPorts() == null || properties.getPorts().size() == 0 ) {
-				url= url+"9200";
+
+			if (properties.getPorts() == null || properties.getPorts().size() == 0) {
+				url = url + "9200";
 			} else {
-				url= url+properties.getPorts().get(0);
+				url = url + properties.getPorts().get(0);
 			}
-			
-			url = url+"/_bulk";
+
+			url = url + "/_bulk";
 			settings.setUrl(new URL(url));
-			
-			if ( properties.getType() == null || properties.getType().length() == 0 )
+
+			if (properties.getType() == null || properties.getType().length() == 0)
 				properties.setType("eslog");
- 			settings.setType(properties.getType());
+			settings.setType(properties.getType());
 
 			ElasticsearchAppender ea = new ElasticsearchAppender(settings);
 			ElasticsearchProperties ep = new ElasticsearchProperties();
@@ -102,11 +102,11 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 			addParameter(ep, "thread", properties.getParameters().get("thread"), "%thread");
 			addParameter(ep, "severity", properties.getParameters().get("severity"), "%level");
 			addParameter(ep, "stacktrace", properties.getParameters().get("stacktrace"), "%ex");
-			
-			if ( properties.getParameters() != null ) {
-				for ( String key : properties.getParameters().keySet() ) {
+
+			if (properties.getParameters() != null) {
+				for (String key : properties.getParameters().keySet()) {
 					LOG.info("   -> " + key.toString() + " - " + properties.getParameters().get(key));
-					if ( !"logger.thread.severity.stacktrace".contains(key) ) {
+					if (!"logger.thread.severity.stacktrace".contains(key)) {
 						addParameter(ep, key, properties.getParameters().get(key), properties.getParameters().get(key));
 					}
 				}
@@ -120,8 +120,8 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 
 			ch.qos.logback.classic.Logger eslog = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("es-logger");
 			eslog.setAdditive(false);
-			
-			LOG.info("ElasticsearchAppender added ["+url+"]");
+
+			LOG.info("ElasticsearchAppender added [" + url + "]");
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 		}
@@ -130,8 +130,9 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	private void addParameter(ElasticsearchProperties ep, String parameter, String value, String defaultValue) {
 		Property property = new Property();
 		property.setName(parameter);
-		if ( value == null )
+		if (value == null) {
 			value = defaultValue;
+		}
 		
 		property.setValue(value);
 		ep.addProperty(property);
