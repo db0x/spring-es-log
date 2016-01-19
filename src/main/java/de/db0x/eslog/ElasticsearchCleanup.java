@@ -27,11 +27,19 @@ public class ElasticsearchCleanup {
 	@Autowired
 	private IndexCleaner ic;
 
+	@Autowired
+	private LogProperties properties;
+
 	// @Scheduled(fixedRate = 5000)
 	@PostConstruct
 	public void clean() {
+		
+		if ( !isAutocleanEnabled() )
+			return;
+		
 		try (TransportClient client = new TransportClient()) {
-			client.addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
+			client.addTransportAddress(
+					new InetSocketTransportAddress(properties.getHost(), properties.getPorts().get(1)));
 
 			ImmutableOpenMap<String, IndexMetaData> indexes = client.admin().cluster().prepareState().execute()
 					.actionGet().getState().getMetaData().getIndices();
@@ -39,16 +47,30 @@ public class ElasticsearchCleanup {
 			for (ObjectCursor<String> key : indexes.keys()) {
 				if (Utils.indexNameMatch(key.value, "")) {
 					Date created = new Date(indexes.get(key.value).creationDate());
-					if (Utils.addDays(null, -3).after(created) && // TODO change 3 to property 
-							client.prepareCount(key.value).get().getCount() > 0) {
-						LOG.info("cleanup index " + key.value + " [" + client.prepareCount(key.value).get().getCount()
+					if (Utils.addDays(null, -1 * ( properties.getClean() )).after(created)) {
+						LOG.info("cleanup index " + key.value + " [" 
+								+ client.prepareCount(key.value).get().getCount()
 								+ "]");
-						ic.clean(key.value);
+						ic.cleanAndDelete(key.value);
 					}
 				}
 			}
-			if (LOG == null) {
-			}
 		}
+	}
+	
+	public boolean isAutocleanEnabled() {
+		if ( properties.getClean() == null || properties.getClean() <= 0 ) {
+			return false;
+		}
+		if ( properties.getPorts().size() < 2 ) {
+			return false;
+		}
+		if ( properties.getPorts().get(1) == null) {
+			return false;
+		}
+		if ( properties.getHost() == null ) {
+			return false;
+		}
+		return true;
 	}
 }

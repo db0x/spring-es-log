@@ -1,5 +1,6 @@
 package de.db0x.eslog;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,8 @@ public class LogProperties {
 	private String host;
 
 	private List<Integer> ports;
+	
+	private Integer clean = 5;
 
 	public boolean isEnableEsLog() {
 		return enableEsLog;
@@ -39,6 +42,10 @@ public class LogProperties {
 	}
 
 	public String getType() {
+		if ( type == null ) {
+			type = "eslog";
+		}
+			
 		return type;
 	}
 
@@ -55,6 +62,11 @@ public class LogProperties {
 	}
 
 	public List<Integer> getPorts() {
+		if ( ports == null || ports.size() != 2 || ports.get(0) == null || ports.get(1) == null ) {
+			ports = new ArrayList<Integer>();
+			ports.add(9200);
+			ports.add(9300);
+		}
 		return ports;
 	}
 
@@ -68,6 +80,14 @@ public class LogProperties {
 
 	public void setHost(String host) {
 		this.host = host;
+	}
+
+	public Integer getClean() {
+		return clean;
+	}
+
+	public void setClean(Integer clean) {
+		this.clean = clean;
 	}
 
 }

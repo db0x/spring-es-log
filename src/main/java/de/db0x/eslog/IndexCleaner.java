@@ -1,5 +1,7 @@
 package de.db0x.eslog;
 
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -7,26 +9,28 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Component
 public class IndexCleaner {
 
 	private final static Logger LOG = LoggerFactory.getLogger(IndexCleaner.class);
 
+	@Autowired
+	private LogProperties properties;
 	@Async
-	public void clean(String indexName) {
+	public void cleanAndDelete(String indexName) {
 		try (TransportClient client = new TransportClient()) {
 
-			client.addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
+			client.addTransportAddress(new InetSocketTransportAddress(properties.getHost(), properties.getPorts().get(1)));
 
-			SearchResponse response = client.prepareSearch(indexName).setQuery(termQuery("_type", "ic-log"))
-					.setFrom(0).setSize(60).execute().actionGet();  // TODO implement with real data
+			SearchResponse response = client.prepareSearch(indexName).setQuery(termQuery("_type", properties.getType()))
+					.setFrom(0).setSize(100).execute().actionGet();  
 
 			for (SearchHit sh : response.getHits().getHits()) {
-				LOG.info(sh.getId());
+				client.prepareDelete(indexName, properties.getType(), sh.getId()).execute();
 			}
 
 			if (client.prepareCount(indexName).get().getCount() == 0) {
@@ -40,12 +44,7 @@ public class IndexCleaner {
 
 		} catch (Exception e) {
 			LOG.error("unable to clean index " + indexName + " " + e.getMessage());
-
 		}
-		// client.prepareDeleteByQuery(indexName)
-		// .setQuery(termQuery("Application", ""))
-		// .execute()
-		// .actionGet();
 	}
 
 	private void delete(TransportClient client, String indexName) {
