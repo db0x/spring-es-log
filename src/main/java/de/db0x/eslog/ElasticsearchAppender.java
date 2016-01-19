@@ -138,7 +138,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	public void addParameter( String parameter, String value, String defaultValue ) {
 		Property property = new Property();
 		property.setName(parameter);
-		if (value == null) {
+		if (value == null || value.length() == 0) {
 			value = defaultValue;
 		}
 		
