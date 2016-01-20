@@ -26,7 +26,7 @@ spring:
       index-name: "log-%date{yyyy-MM-dd}"          # pattern for index-name default is log-%date{yyyy-MM-dd}
       clean: 5                                     # indices will be cleaned after x days (null -> never clean indices) default is 5
       cleanInterval: 60                            # interval of clean in minutes default is 60
-      cleanNumberOfDocuments                       # number of documents will be deleted in one run default is 10000 
+      cleanNumberOfDocuments: 100000               # number of documents will be deleted in one run default is 10000 
       parameters:        
         severity: "%level"                         # default is %level
         thread: "%thread"                          # default is %thread
