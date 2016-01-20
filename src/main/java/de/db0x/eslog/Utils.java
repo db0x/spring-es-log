@@ -40,4 +40,15 @@ public class Utils {
 		cal.add(Calendar.DATE, days); 
 		return cal.getTime();
 	}
+	
+	public static Date addMinutes(Date date, int minutes) {
+		if (date == null)  {
+			date = new Date();
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MINUTE, minutes); 
+		return cal.getTime();
+	}
+	
 }

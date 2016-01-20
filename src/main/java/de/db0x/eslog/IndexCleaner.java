@@ -3,6 +3,7 @@ package de.db0x.eslog;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.flush.FlushRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
@@ -20,6 +21,7 @@ public class IndexCleaner {
 
 	@Autowired
 	private LogProperties properties;
+	
 	@Async
 	public void cleanAndDelete(String indexName) {
 		try (TransportClient client = new TransportClient()) {
@@ -27,12 +29,14 @@ public class IndexCleaner {
 			client.addTransportAddress(new InetSocketTransportAddress(properties.getHost(), properties.getPorts().get(1)));
 
 			SearchResponse response = client.prepareSearch(indexName).setQuery(termQuery("_type", properties.getType()))
-					.setFrom(0).setSize(100).execute().actionGet();  
+					.setFrom(0).setSize(properties.getCleanNumberOfDocuments()).execute().actionGet();  
 
 			for (SearchHit sh : response.getHits().getHits()) {
 				client.prepareDelete(indexName, properties.getType(), sh.getId()).execute();
 			}
-
+			
+			client.admin().indices().flush(new FlushRequest(indexName)).actionGet();
+			
 			if (client.prepareCount(indexName).get().getCount() == 0) {
 				LOG.info("delete index " + indexName + " because it is empty");
 				try {

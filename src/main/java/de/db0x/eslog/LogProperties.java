@@ -23,7 +23,11 @@ public class LogProperties {
 
 	private List<Integer> ports;
 	
-	private Integer clean = 5;
+	private Integer clean ;
+	
+	private Integer cleanInterval;
+	
+	private Integer cleanNumberOfDocuments;
 
 	public boolean isEnableEsLog() {
 		return enableEsLog;
@@ -88,6 +92,29 @@ public class LogProperties {
 
 	public void setClean(Integer clean) {
 		this.clean = clean;
+	}
+
+	public Integer getCleanIntervall() {
+		if ( cleanInterval == null ) {
+			cleanInterval =  60;
+		}
+		return cleanInterval;
+	}
+
+	public void setCleanInterval(Integer cleanInterval) {
+		this.cleanInterval = cleanInterval;
+	}
+
+	public Integer getCleanNumberOfDocuments() {
+		if ( cleanNumberOfDocuments == null ) {
+			cleanNumberOfDocuments = 10000;
+		}
+			
+		return cleanNumberOfDocuments;
+	}
+
+	public void setCleanNumberOfDocuments(Integer cleanNumberOfDocuments) {
+		this.cleanNumberOfDocuments = cleanNumberOfDocuments;
 	}
 
 }
