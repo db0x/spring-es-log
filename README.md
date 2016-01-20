@@ -43,13 +43,15 @@ spring:
 ```
 Usage
 =====
-simply add it to your maven pom 
+- clone this repo
+- build it
+- add it to your maven pom 
 ```xml
-		<dependency>
-			<groupId>de.db0x</groupId>
-			<artifactId>spring-es-log</artifactId>
-			<version>0.0.1</version>
-		</dependency>
+	<dependency>
+		<groupId>de.db0x</groupId>
+		<artifactId>spring-es-log</artifactId>
+		<version>0.0.1</version>
+	</dependency>
 ```
 and annotate an class with @EnableESLog.
 
