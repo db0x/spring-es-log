@@ -55,11 +55,11 @@ Usage
 	</repositories>
 	
 	<dependencies>
-	<dependency>
-		<groupId>de.db0x</groupId>
-		<artifactId>spring-es-log</artifactId>
-		<version>0.0.1</version>
-	</dependency>
+	    <dependency>
+	    	<groupId>de.db0x</groupId>
+		    <artifactId>spring-es-log</artifactId>
+		    <version>0.0.1</version>
+	    </dependency>
 	...
 	</dependencies>
 ```
