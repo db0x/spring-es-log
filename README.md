@@ -45,7 +45,10 @@ Usage
 =====
 - clone this repo
 - build it
-- add it to your maven pom 
+- use ist
+
+or
+- add this to your maven pom 
 ```xml
 	<repositories>
 		<repository>
