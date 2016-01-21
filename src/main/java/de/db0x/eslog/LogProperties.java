@@ -87,6 +87,9 @@ public class LogProperties {
 	}
 
 	public Integer getClean() {
+		if ( clean == null ) {
+			clean = 5;
+		}
 		return clean;
 	}
 

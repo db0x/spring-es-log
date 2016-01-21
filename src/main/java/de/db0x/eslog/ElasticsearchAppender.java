@@ -36,7 +36,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	private Boolean enabled;
 
 	@Autowired
-	private LogProperties properties;
+	private LogProperties properties = new LogProperties();
 
 	private ElasticsearchProperties esProperties = new ElasticsearchProperties();
 
@@ -180,5 +180,8 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	public ElasticsearchProperties getEsProperties() {
 		return esProperties;
 	}
-
+	
+	public LogProperties getLogPropertied() {
+		return properties;
+	}
 }

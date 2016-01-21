@@ -30,13 +30,19 @@ public class ElasticsearchAppenderTest {
 		LOG.info("added test2/2/nothing");		
 
 		Assert.assertEquals("expected two",2,esa.getEsProperties().getProperties().size());
-		LOG.info("passed size = 1");
+		LOG.info("passed size = 2");
 		
 		Assert.assertEquals("expected name","test2",esa.getEsProperties().getProperties().get(1).getName());
 		LOG.info("passed name = test2");
 		
 		Assert.assertEquals("expected value","2",esa.getEsProperties().getProperties().get(1).getValue());
 		LOG.info("passed value = 2");
+		
+		Assert.assertEquals("expected default-clean", 5,esa.getLogPropertied().getClean().intValue());
+		LOG.info("passed default (clean) = 5");
+
+		Assert.assertEquals("expected default-clean-numberOfDocuments", 10000,esa.getLogPropertied().getCleanNumberOfDocuments().intValue());
+		LOG.info("passed default (clean-numberOfDocuments) = 10000");
 
 	}
 }
