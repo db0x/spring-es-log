@@ -49,7 +49,7 @@ Usage
 ```xml
 	<repositories>
 		<repository>
-			<id>db0xx</id>
+			<id>db0x</id>
 			<url>http://mvn.db0x.de</url>
 		</repository>
 	</repositories>
