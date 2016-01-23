@@ -2,6 +2,7 @@ package de.db0x.eslog;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,8 +27,32 @@ public class Utils {
 	}
 
 	public static boolean indexNameMatch(String index, String pattern) {
-		if (index.startsWith("log-"))  // TODO implement 
-			return true;
+		if ( pattern.contains("%date{")) {
+			String[] tempPattern = pattern.replace("%", "").split("date");
+			if ( tempPattern.length != 2 ) {
+				return false;
+			} else {
+				if ( !index.startsWith(tempPattern[0])) {
+					return false;
+				}
+				String temp = index.replace(tempPattern[0], "");
+				String dateformat = tempPattern[1].replace("{","").replace("}","");
+				if ( temp.length() != dateformat.length()) {
+					return false;
+				}
+				try {					
+					SimpleDateFormat sdf = new SimpleDateFormat(dateformat);
+					sdf.parse(temp);
+					return true;
+				} catch ( Exception e) {
+					return false;
+				}
+			}				
+		} else {
+			if (index.equalsIgnoreCase(pattern)) {   
+				return true;
+			}
+		}	
 		return false;
 	}
 

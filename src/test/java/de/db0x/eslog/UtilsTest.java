@@ -36,5 +36,11 @@ public class UtilsTest {
 		Assert.assertEquals("expected -1 days", now.getTime()-( 1000 * 60  ) , minus1m.getTime());
 		LOG.info("passed date-1m");
 		
+		Assert.assertEquals("indexNameMatch 01", true ,Utils.indexNameMatch("log-2016-01-20"         , "log-%date{yyyy-MM-dd}"));
+		Assert.assertEquals("indexNameMatch 02", false,Utils.indexNameMatch("log-201a-01-20"         , "log-%date{yyyy-MM-dd}"));
+		Assert.assertEquals("indexNameMatch 03", false,Utils.indexNameMatch("log-2016-0a-20"         , "log-%date{yyyy-MM-dd}"));
+		Assert.assertEquals("indexNameMatch 04", false,Utils.indexNameMatch("log-2016-01-2asd"       , "log-%date{yyyy-MM-dd}"));
+		Assert.assertEquals("indexNameMatch 05", true ,Utils.indexNameMatch("log-foo-2016-01-20"     , "log-foo-%date{yyyy-MM-dd}"));
+		
 	}
 }
