@@ -21,7 +21,8 @@ spring:
     log: 
       enable-es-log: true                          # default is true
       host: localhost                              # host of the es cluster default is localhost
-      ports: [9200,9300]                           # ports of the es cluster default is 9200 / 9300
+      ports: [9200,9300]                           # ports of the es cluster 
+                                                   #   default is 9200 / 9300
                                                    #   (HTTP / transport)
       type: "eslog"                                # _type in index will be used for clean-query
       index-name: "log-%date{yyyy-MM-dd}"          # pattern for index-name
