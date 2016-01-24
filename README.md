@@ -49,6 +49,7 @@ Usage
 
 or
 - add this to your maven pom 
+
 ```xml
 <repositories>
 	<repository>
@@ -56,16 +57,15 @@ or
 		<url>http://mvn.db0x.de</url>
 	</repository>
 </repositories>
-
 <dependencies>
     <dependency>
     	<groupId>de.db0x</groupId>
 	    <artifactId>spring-es-log</artifactId>
 	    <version>0.0.1</version>
     </dependency>
-...
 </dependencies>
 ```
+
 and annotate an class with @EnableESLog.
 
 * pro + no xml configuration is needed
