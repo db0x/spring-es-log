@@ -62,7 +62,7 @@ or
     <dependency>
     	<groupId>de.db0x</groupId>
 	    <artifactId>spring-es-log</artifactId>
-	    <version>0.0.1</version>
+	    <version>0.0.2</version>
     </dependency>
 </dependencies>
 ```
@@ -77,3 +77,5 @@ Usage of additional %X{...} parameters
 you can add new columns to the index using parameter and %X{...}
 
 with %X you can read what was put into org.slf4j.MDC
+
+
