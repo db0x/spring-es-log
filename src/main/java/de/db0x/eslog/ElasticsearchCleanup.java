@@ -53,7 +53,7 @@ public class ElasticsearchCleanup {
 						.actionGet().getState().getMetaData().getIndices();
 	
 				for (ObjectCursor<String> key : indexes.keys()) {
-					if (Utils.indexNameMatch(key.value, "")) {
+					if (Utils.indexNameMatch(key.value, properties.getIndexName())) {
 						Date created = new Date(indexes.get(key.value).creationDate());
 						if (Utils.addDays(null, -1 * ( properties.getClean() )).after(created)) {
 							LOG.info("cleanup index " + key.value + " [" 
