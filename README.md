@@ -29,7 +29,7 @@ spring:
                                                    #   default is log-%date{yyyy-MM-dd}
       clean: 5                                     # indices will be cleaned after x days
                                                    #   (-1 -> never clean indices) default is 5                 
-      cleanInterval: 60                            # interval of clean in minutes default is 60
+      cleanIntervall: 60                           # interval of clean in minutes default is 60
       cleanNumberOfDocuments: 100000               # number of documents will be deleted 
                                                    #   in one run default is 10000 
       parameters:        
