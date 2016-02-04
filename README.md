@@ -24,7 +24,7 @@ spring:
       ports: [9200,9300]                           # ports of the es cluster 
                                                    #   default is 9200 / 9300
                                                    #   (HTTP / transport)
-      clustername								   # cluster name of the ES cluster
+      clustername: elasticsearch			       # cluster name of the ES cluster
       											   #   default is elasticsearch
       type: "eslog"                                # _type in index will be used for clean-query
       index-name: "log-%date{yyyy-MM-dd}"          # pattern for index-name
