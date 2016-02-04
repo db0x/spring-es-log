@@ -25,7 +25,7 @@ public class LogProperties {
 	
 	private Integer clean ;
 	
-	private Integer cleanInterval;
+	private Integer cleanIntervall;
 	
 	private Integer cleanNumberOfDocuments;
 	
@@ -100,14 +100,14 @@ public class LogProperties {
 	}
 
 	public Integer getCleanIntervall() {
-		if ( cleanInterval == null ) {
-			cleanInterval =  60;
+		if ( cleanIntervall == null ) {
+			cleanIntervall =  60;
 		}
-		return cleanInterval;
+		return cleanIntervall;
 	}
 
-	public void setCleanIntervall(Integer cleanInterval) {
-		this.cleanInterval = cleanInterval;
+	public void setCleanIntervall(Integer cleanIntervall) {
+		this.cleanIntervall = cleanIntervall;
 	}
 
 	public Integer getCleanNumberOfDocuments() {
