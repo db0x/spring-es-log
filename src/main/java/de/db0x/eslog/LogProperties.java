@@ -28,6 +28,8 @@ public class LogProperties {
 	private Integer cleanInterval;
 	
 	private Integer cleanNumberOfDocuments;
+	
+	private String clustername;
 
 	public boolean isEnableEsLog() {
 		return enableEsLog;
@@ -104,7 +106,7 @@ public class LogProperties {
 		return cleanInterval;
 	}
 
-	public void setCleanInterval(Integer cleanInterval) {
+	public void setCleanIntervall(Integer cleanInterval) {
 		this.cleanInterval = cleanInterval;
 	}
 
@@ -118,6 +120,17 @@ public class LogProperties {
 
 	public void setCleanNumberOfDocuments(Integer cleanNumberOfDocuments) {
 		this.cleanNumberOfDocuments = cleanNumberOfDocuments;
+	}
+
+	public String getClustername() {
+		if ( clustername == null || clustername.length() == 0 ) {
+			return "elasticsearch";
+		}
+		return clustername;
+	}
+
+	public void setClustername(String clustername) {
+		this.clustername = clustername;
 	}
 
 }

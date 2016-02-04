@@ -6,6 +6,8 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.hppc.cursors.ObjectCursor;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +47,14 @@ public class ElasticsearchCleanup {
 		}
 		
 		try {			
-			try (TransportClient client = new TransportClient()) {
+			Settings settings = ImmutableSettings.settingsBuilder()
+			        .put("cluster.name", properties.getClustername() ).build();
+			try (
+					TransportClient client = new TransportClient(settings);
+				) {
 				client.addTransportAddress(
 						new InetSocketTransportAddress(properties.getHost(), properties.getPorts().get(1)));
-	
+				
 				ImmutableOpenMap<String, IndexMetaData> indexes = client.admin().cluster().prepareState().execute()
 						.actionGet().getState().getMetaData().getIndices();
 	

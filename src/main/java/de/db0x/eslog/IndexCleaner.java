@@ -6,6 +6,8 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.flush.FlushRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
@@ -24,7 +26,11 @@ public class IndexCleaner {
 	
 	@Async
 	public void cleanAndDelete(String indexName) {
-		try (TransportClient client = new TransportClient()) {
+		
+		Settings settings = ImmutableSettings.settingsBuilder()
+		        .put("cluster.name", properties.getClustername() ).build();
+
+		try (TransportClient client = new TransportClient(settings)) {
 
 			client.addTransportAddress(new InetSocketTransportAddress(properties.getHost(), properties.getPorts().get(1)));
 

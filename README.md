@@ -24,13 +24,15 @@ spring:
       ports: [9200,9300]                           # ports of the es cluster 
                                                    #   default is 9200 / 9300
                                                    #   (HTTP / transport)
+      clustername								   # cluster name of the ES cluster
+      											   #   default is elasticsearch
       type: "eslog"                                # _type in index will be used for clean-query
       index-name: "log-%date{yyyy-MM-dd}"          # pattern for index-name
                                                    #   default is log-%date{yyyy-MM-dd}
       clean: 5                                     # indices will be cleaned after x days
                                                    #   (-1 -> never clean indices) default is 5                 
-      cleanInterval: 60                            # interval of clean in minutes default is 60
-      cleanNumberOfDocuments: 100000               # number of documents will be deleted 
+      clean-interval: 60                           # interval of clean in minutes default is 60
+      clean-number-of-documents: 100000            # number of documents will be deleted 
                                                    #   in one run default is 10000 
       parameters:        
         severity: "%level"                         # default is %level
