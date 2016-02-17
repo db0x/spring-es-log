@@ -5,6 +5,8 @@ Integration of ElasticSearch-Log Appender in spring-boot without xml configurati
 
 bases on https://github.com/internetitem/logback-elasticsearch-appender
 
+stable : 0.0.3
+
 motivation : use elasticsearch-appender without logback.xml 
 cofiguration in appication.yml of the spring boot container
 
@@ -64,7 +66,7 @@ or
     <dependency>
     	<groupId>de.db0x</groupId>
 	    <artifactId>spring-es-log</artifactId>
-	    <version>0.0.2</version>
+	    <version>0.0.3</version>
     </dependency>
 </dependencies>
 ```
