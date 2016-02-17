@@ -12,6 +12,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -33,6 +34,9 @@ public class ElasticsearchCleanup {
 	@Autowired
 	private LogProperties properties;
 	
+	@Value(value = "${spring.application.log.enable-es-log:false}")
+	private Boolean enabled;
+
 	private Date lastRun = null;
 
 	@Scheduled(fixedRate= 60000)
@@ -76,6 +80,9 @@ public class ElasticsearchCleanup {
 	}
 	
 	public boolean isAutocleanEnabled() {
+		if ( enabled == null  || enabled == false) {
+			return false;
+		}
 		if ( properties.getClean() == null || properties.getClean() <= 0 ) {
 			return false;
 		}
