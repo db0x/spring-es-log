@@ -26,13 +26,13 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 
 	private final static Logger LOG = LoggerFactory.getLogger(ElasticsearchAppender.class);
 
-	@Value(value = "${server.port}")
+	@Value(value = "${server.port:-1}")
 	private String serverPort;
 
-	@Value(value = "${spring.application.name}")
+	@Value(value = "${spring.application.name:UNKNOWN}")
 	private String appName;
 
-	@Value(value = "${spring.application.log.enable-es-log}")
+	@Value(value = "${spring.application.log.enable-es-log:false}")
 	private Boolean enabled;
 
 	@Autowired
