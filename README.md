@@ -5,7 +5,7 @@ Integration of ElasticSearch-Log Appender in spring-boot without xml configurati
 
 bases on https://github.com/internetitem/logback-elasticsearch-appender
 
-stable : 0.0.5
+stable : 0.0.6
 
 motivation : use elasticsearch-appender without logback.xml 
 cofiguration in appication.yml of the spring boot container
@@ -66,7 +66,7 @@ or
     <dependency>
     	<groupId>de.db0x</groupId>
 	    <artifactId>spring-es-log</artifactId>
-	    <version>0.0.4</version>
+	    <version>0.0.6</version>
     </dependency>
 </dependencies>
 ```
@@ -83,6 +83,8 @@ you can add new columns to the index using parameter and %X{...}
 with %X you can read what was put into org.slf4j.MDC
 
 
+0.0.6 -> still version-problems
+      -> + TestSuite
 0.0.5 -> change of min-versions of Spring / Spring-Boot / ES
 
 
