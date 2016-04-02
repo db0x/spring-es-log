@@ -86,6 +86,6 @@ with %X you can read what was put into org.slf4j.MDC
 0.0.6 -> still version-problems
       -> + TestSuite
 0.0.5 -> change of min-versions of Spring / Spring-Boot / ES
-
 ---
+
 
