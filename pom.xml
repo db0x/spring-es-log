@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.db0x</groupId>
 	<artifactId>spring-es-log</artifactId>
-	<version>0.0.8</version>
+	<version>0.0.9</version>
 	<name>spring-es-log</name>
 
 	<url>https://github.com/db0x/spring-es-log</url>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>com.internetitem</groupId>
 			<artifactId>logback-elasticsearch-appender</artifactId>
-			<version>1.2</version>			
+			<version>1.3</version>			
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

@@ -174,7 +174,8 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	}
 
 	protected ClassicElasticsearchPublisher buildElasticsearchPublisher() throws IOException {
-		return new ClassicElasticsearchPublisher(getContext(), errorReporter, settings, elasticsearchProperties);
+		return new ClassicElasticsearchPublisher(getContext(), errorReporter, settings, elasticsearchProperties, headers) {
+		};
 	}
 
 	public ElasticsearchProperties getEsProperties() {
