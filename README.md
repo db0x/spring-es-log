@@ -82,6 +82,7 @@ you can add new columns to the index using parameter and %X{...}
 
 with %X you can read what was put into org.slf4j.MDC
 
+0.0.10-> changed to sspringboot 1.4 + es 2.3.4
 0.0.9 -> upgrade to logback-elasticsearch-appender 1.3
 0.0.8 -> was not longer compatible to logback-elasticsearch-appender
 0.0.7 -> version-madness 

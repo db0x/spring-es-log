@@ -1,12 +1,12 @@
 package de.db0x.eslog;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
-import org.elasticsearch.common.hppc.cursors.ObjectCursor;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
@@ -18,6 +18,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import com.carrotsearch.hppc.cursors.ObjectCursor;
 
 @Component
 @Scope("singleton")
@@ -51,28 +53,35 @@ public class ElasticsearchCleanup {
 		}
 		
 		try {			
-			Settings settings = ImmutableSettings.settingsBuilder()
+			Settings settings = Settings.builder()
 			        .put("cluster.name", properties.getClustername() ).build();
 			try (
-					TransportClient client = new TransportClient(settings);
+					TransportClient client = TransportClient.builder()
+					.settings(settings)
+					.build()
+					.addTransportAddress(new InetSocketTransportAddress( 
+							InetAddress.getByName(properties.getHost()), 
+							properties.getPorts().get(1)));
+					
 				) {
-				client.addTransportAddress(
-						new InetSocketTransportAddress(properties.getHost(), properties.getPorts().get(1)));
 				
 				ImmutableOpenMap<String, IndexMetaData> indexes = client.admin().cluster().prepareState().execute()
 						.actionGet().getState().getMetaData().getIndices();
 	
-				for (ObjectCursor<String> key : indexes.keys()) {
+				
+				for (ObjectCursor<String> key : indexes.keys() ) {
 					if (Utils.indexNameMatch(key.value, properties.getIndexName())) {
-						Date created = new Date(indexes.get(key.value).creationDate());
+						Date created = new Date(indexes.get(key.value).getCreationDate() );
 						if (Utils.addDays(null, -1 * ( properties.getClean() )).after(created)) {
 							LOG.info("cleanup index " + key.value + " [" 
-									+ client.prepareCount(key.value).get().getCount()
+									+ client.prepareSearch().execute().actionGet().getHits().getTotalHits()
 									+ "]");
 							ic.cleanAndDelete(key.value);
 						}
 					}
 				}
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
 			}
 		} finally {
 			lastRun = new Date();

@@ -2,11 +2,12 @@ package de.db0x.eslog;
 
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
+import java.net.InetAddress;
+
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.flush.FlushRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.search.SearchHit;
@@ -27,12 +28,16 @@ public class IndexCleaner {
 	@Async
 	public void cleanAndDelete(String indexName) {
 		
-		Settings settings = ImmutableSettings.settingsBuilder()
+		Settings settings = Settings.builder()
 		        .put("cluster.name", properties.getClustername() ).build();
 
-		try (TransportClient client = new TransportClient(settings)) {
-
-			client.addTransportAddress(new InetSocketTransportAddress(properties.getHost(), properties.getPorts().get(1)));
+		try (TransportClient client = TransportClient.builder()
+				.settings(settings)
+				.build()
+				.addTransportAddress(new InetSocketTransportAddress( 
+						InetAddress.getByName(properties.getHost()), 
+						properties.getPorts().get(1)));
+				) {
 
 			SearchResponse response = client.prepareSearch(indexName).setQuery(termQuery("_type", properties.getType()))
 					.setFrom(0).setSize(properties.getCleanNumberOfDocuments()).execute().actionGet();  
@@ -43,7 +48,7 @@ public class IndexCleaner {
 			
 			client.admin().indices().flush(new FlushRequest(indexName)).actionGet();
 			
-			if (client.prepareCount(indexName).get().getCount() == 0) {
+			if (client.prepareSearch().execute().actionGet().getHits().getTotalHits() == 0) {
 				LOG.info("delete index " + indexName + " because it is empty");
 				try {
 					delete(client, indexName);
