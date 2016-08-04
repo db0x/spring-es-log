@@ -39,16 +39,22 @@ public class IndexCleaner {
 						properties.getPorts().get(1)));
 				) {
 
-			SearchResponse response = client.prepareSearch(indexName).setQuery(termQuery("_type", properties.getType()))
-					.setFrom(0).setSize(properties.getCleanNumberOfDocuments()).execute().actionGet();  
+			int size = properties.getCleanNumberOfDocuments();
+			if ( size > 10000 ) {
+				LOG.warn("property cleanNumberOfDocuments is to lage ("+size+") use max = 10000 !");
+				size = 10000;
+			}
+			SearchResponse response = client.prepareSearch(indexName)
+					.setQuery(termQuery("_type", properties.getType()))
+					.setFrom(0).setSize(size).execute().actionGet();  
 
 			for (SearchHit sh : response.getHits().getHits()) {
 				client.prepareDelete(indexName, properties.getType(), sh.getId()).execute();
 			}
 			
 			client.admin().indices().flush(new FlushRequest(indexName)).actionGet();
-			
-			if (client.prepareSearch().execute().actionGet().getHits().getTotalHits() == 0) {
+						
+			if (client.prepareSearch(indexName).execute().actionGet().getHits().getTotalHits() == 0) {
 				LOG.info("delete index " + indexName + " because it is empty");
 				try {
 					delete(client, indexName);
@@ -56,7 +62,6 @@ public class IndexCleaner {
 					LOG.error("unable to delete index " + indexName + " " + e.getMessage());
 				}
 			}
-
 		} catch (Exception e) {
 			LOG.error("unable to clean index " + indexName + " " + e.getMessage());
 		}

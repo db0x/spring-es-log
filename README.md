@@ -5,7 +5,8 @@ Integration of ElasticSearch-Log Appender in spring-boot without xml configurati
 
 bases on https://github.com/internetitem/logback-elasticsearch-appender
 
-stable : 0.0.9
+stable : 0.0.9 (spring-boot < 1.4 and es < 2.0 )
+         0.1.0 (spring-boot = 1.4 and es > 2.0 )
 
 motivation : use elasticsearch-appender without logback.xml 
 cofiguration in appication.yml of the spring boot container
@@ -82,7 +83,8 @@ you can add new columns to the index using parameter and %X{...}
 
 with %X you can read what was put into org.slf4j.MDC
 
-0.0.10-> changed to sspringboot 1.4 + es 2.3.4
+0.1.0 -> changed to springboot 1.4 + es 2.3.4
+
 0.0.9 -> upgrade to logback-elasticsearch-appender 1.3
 0.0.8 -> was not longer compatible to logback-elasticsearch-appender
 0.0.7 -> version-madness 
