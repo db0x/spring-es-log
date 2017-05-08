@@ -28,8 +28,8 @@ spring:
       ports: [9200,9300]                           # ports of the es cluster 
                                                    #   default is 9200 / 9300
                                                    #   (HTTP / transport)
-      clustername: elasticsearch			       # cluster name of the ES cluster
-      											   #   default is elasticsearch
+      clustername: elasticsearch                   # cluster name of the ES cluster
+                                                   #   default is elasticsearch
       type: "eslog"                                # _type in index will be used for clean-query
       index-name: "log-%date{yyyy-MM-dd}"          # pattern for index-name
                                                    #   default is log-%date{yyyy-MM-dd}
@@ -85,13 +85,9 @@ you can add new columns to the index using parameter and %X{...}
 with %X you can read what was put into org.slf4j.MDC
 
 0.1.0 -> changed to springboot 1.4 + es 2.3.4
-
 0.0.9 -> upgrade to logback-elasticsearch-appender 1.3
 0.0.8 -> was not longer compatible to logback-elasticsearch-appender
-0.0.7 -> version-madness 
+0.0.7 -> version-madness
 0.0.6 -> still version-problems
       -> + TestSuite
 0.0.5 -> change of min-versions of Spring / Spring-Boot / ES
----
-
-
