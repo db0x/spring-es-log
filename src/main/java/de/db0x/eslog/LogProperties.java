@@ -1,13 +1,14 @@
 package de.db0x.eslog;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@ConfigurationProperties(value = "spring.application.log", merge = true)
+@ConfigurationProperties(
+		value = "spring.application.log", 
+		ignoreInvalidFields = true, 
+		ignoreUnknownFields = true)
 @Component
 public class LogProperties {
 
@@ -21,13 +22,7 @@ public class LogProperties {
 
 	private String host;
 
-	private List<Integer> ports;
-	
-	private Integer clean ;
-	
-	private Integer cleanIntervall;
-	
-	private Integer cleanNumberOfDocuments;
+	private Integer port;
 	
 	private String clustername;
 
@@ -67,17 +62,15 @@ public class LogProperties {
 		this.parameters = parameters;
 	}
 
-	public List<Integer> getPorts() {
-		if ( ports == null || ports.size() != 2 || ports.get(0) == null || ports.get(1) == null ) {
-			ports = new ArrayList<Integer>();
-			ports.add(9200);
-			ports.add(9300);
+	public Integer getPort() {
+		if ( this.port == null ) { 
+			return 9200;
 		}
-		return ports;
+		return this.port;
 	}
 
-	public void setPorts(List<Integer> ports) {
-		this.ports = ports;
+	public void setPort(Integer port) {
+		this.port = port;
 	}
 
 	public String getHost() {
@@ -86,40 +79,6 @@ public class LogProperties {
 
 	public void setHost(String host) {
 		this.host = host;
-	}
-
-	public Integer getClean() {
-		if ( clean == null ) {
-			clean = 5;
-		}
-		return clean;
-	}
-
-	public void setClean(Integer clean) {
-		this.clean = clean;
-	}
-
-	public Integer getCleanIntervall() {
-		if ( cleanIntervall == null ) {
-			cleanIntervall =  60;
-		}
-		return cleanIntervall;
-	}
-
-	public void setCleanIntervall(Integer cleanIntervall) {
-		this.cleanIntervall = cleanIntervall;
-	}
-
-	public Integer getCleanNumberOfDocuments() {
-		if ( cleanNumberOfDocuments == null ) {
-			cleanNumberOfDocuments = 10000;
-		}
-			
-		return cleanNumberOfDocuments;
-	}
-
-	public void setCleanNumberOfDocuments(Integer cleanNumberOfDocuments) {
-		this.cleanNumberOfDocuments = cleanNumberOfDocuments;
 	}
 
 	public String getClustername() {

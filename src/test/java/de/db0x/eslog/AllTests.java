@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ElasticsearchAppenderTest.class, UtilsTest.class })
+@SuiteClasses({  UtilsTest.class })
 public class AllTests {
 
 }

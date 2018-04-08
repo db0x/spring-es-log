@@ -1,6 +1,5 @@
 package de.db0x.eslog;
 
-import java.io.IOException;
 import java.net.URL;
 
 import javax.annotation.PostConstruct;
@@ -12,17 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.internetitem.logback.elasticsearch.AbstractElasticsearchAppender;
-import com.internetitem.logback.elasticsearch.ClassicElasticsearchPublisher;
-import com.internetitem.logback.elasticsearch.config.ElasticsearchProperties;
 import com.internetitem.logback.elasticsearch.config.Property;
 import com.internetitem.logback.elasticsearch.config.Settings;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.UnsynchronizedAppenderBase;
 
 @Component
-public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggingEvent> {
+public class ElasticsearchAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
 	private final static Logger LOG = LoggerFactory.getLogger(ElasticsearchAppender.class);
 
@@ -38,7 +35,6 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 	@Autowired
 	private LogProperties properties = new LogProperties();
 
-	private ElasticsearchProperties esProperties = new ElasticsearchProperties();
 
 	public ElasticsearchAppender() {
 	}
@@ -87,11 +83,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 				url = "http://" + properties.getHost() + ":";
 			}
 
-			if (properties.getPorts() == null || properties.getPorts().size() == 0) {
-				url = url + "9200";
-			} else {
-				url = url + properties.getPorts().get(0);
-			}
+			url = url + properties.getPort();
 
 			url = url + "/_bulk";
 			settings.setUrl(new URL(url));
@@ -100,7 +92,7 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 				properties.setType("eslog");
 			settings.setType(properties.getType());
 
-			ElasticsearchAppender ea = new ElasticsearchAppender(settings);
+			ElasticsearchAppender ea = new ElasticsearchAppender();
 			
 			addDefaultParameters();
 			
@@ -113,7 +105,6 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 				}
 			}
 
-			ea.setProperties(esProperties);
 			ea.setContext(lc);
 			ea.start();
 
@@ -143,46 +134,10 @@ public class ElasticsearchAppender extends AbstractElasticsearchAppender<ILoggin
 		}
 		
 		property.setValue(value);
-		esProperties.addProperty(property);
-	}
-
-	public ElasticsearchAppender(Settings settings) {
-		super(settings);
 	}
 
 	@Override
-	protected void appendInternal(ILoggingEvent eventObject) {
-
-		String targetLogger = eventObject.getLoggerName();
-
-		String loggerName = settings.getLoggerName();
-		if (loggerName != null && loggerName.equals(targetLogger)) {
-			return;
-		}
-
-		String errorLoggerName = settings.getErrorLoggerName();
-		if (errorLoggerName != null && errorLoggerName.equals(targetLogger)) {
-			return;
-		}
-
-		eventObject.prepareForDeferredProcessing();
-		if (settings.isIncludeCallerData()) {
-			eventObject.getCallerData();
-		}
-
-		publishEvent(eventObject);
-	}
-
-	protected ClassicElasticsearchPublisher buildElasticsearchPublisher() throws IOException {
-		return new ClassicElasticsearchPublisher(getContext(), errorReporter, settings, elasticsearchProperties, headers) {
-		};
-	}
-
-	public ElasticsearchProperties getEsProperties() {
-		return esProperties;
-	}
-	
-	public LogProperties getLogPropertied() {
-		return properties;
+	protected void append(ILoggingEvent eventObject) {
+		// System.err.println(eventObject);
 	}
 }
